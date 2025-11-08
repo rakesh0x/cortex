@@ -1,4 +1,4 @@
-# 🧠 Cortex Linux
+ds# 🧠 Cortex Linux
 ### The AI-Native Operating System
 
 **Linux that understands you. No documentation required.**
@@ -75,7 +75,7 @@ Browse [Issues](../../issues) for contribution opportunities.
 
 ### Join the Community
 
-- **Discord**: Coming soon
+- **Discord**: https://discord.gg/uCqHvxjU83
 - **Email**: mike@cortexlinux.com
 
 ## Why This Matters
