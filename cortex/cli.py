@@ -25,6 +25,14 @@ from cortex.user_preferences import (
     print_all_preferences,
     format_preference_value
 )
+from cortex.branding import (
+    console,
+    cx_print,
+    cx_step,
+    cx_header,
+    show_banner,
+    VERSION
+)
 
 
 class CortexCLI:
@@ -32,36 +40,45 @@ class CortexCLI:
         self.spinner_chars = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']
         self.spinner_idx = 0
         self.prefs_manager = None  # Lazy initialization
-    
+
     def _get_api_key(self) -> Optional[str]:
         api_key = os.environ.get('OPENAI_API_KEY') or os.environ.get('ANTHROPIC_API_KEY')
         if not api_key:
             self._print_error("API key not found. Set OPENAI_API_KEY or ANTHROPIC_API_KEY environment variable.")
+            cx_print("Run [bold]cortex wizard[/bold] to configure your API key.", "info")
             return None
         return api_key
-    
+
     def _get_provider(self) -> str:
         if os.environ.get('OPENAI_API_KEY'):
             return 'openai'
         elif os.environ.get('ANTHROPIC_API_KEY'):
             return 'claude'
         return 'openai'
-    
+
     def _print_status(self, emoji: str, message: str):
-        print(f"{emoji} {message}")
-    
+        """Legacy status print - maps to cx_print for Rich output"""
+        status_map = {
+            "🧠": "thinking",
+            "📦": "info",
+            "⚙️": "info",
+            "🔍": "info",
+        }
+        status = status_map.get(emoji, "info")
+        cx_print(message, status)
+
     def _print_error(self, message: str):
-        print(f"❌ Error: {message}", file=sys.stderr)
-    
+        cx_print(f"Error: {message}", "error")
+
     def _print_success(self, message: str):
-        print(f"✅ {message}")
-    
+        cx_print(message, "success")
+
     def _animate_spinner(self, message: str):
         sys.stdout.write(f"\r{self.spinner_chars[self.spinner_idx]} {message}")
         sys.stdout.flush()
         self.spinner_idx = (self.spinner_idx + 1) % len(self.spinner_chars)
         time.sleep(0.1)
-    
+
     def _clear_line(self):
         sys.stdout.write('\r\033[K')
         sys.stdout.flush()
