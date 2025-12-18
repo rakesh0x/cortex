@@ -1,5 +1,6 @@
-from intent.detector import IntentDetector
 from intent.clarifier import Clarifier
+from intent.detector import IntentDetector
+
 
 def test_clarifier_gpu_missing():
     d = IntentDetector()

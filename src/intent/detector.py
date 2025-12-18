@@ -1,13 +1,15 @@
+from dataclasses import dataclass
+from typing import List, ClassVar
+
 # detector.py
 
-from dataclasses import dataclass
-from typing import List, Optional, ClassVar
 
 @dataclass
 class Intent:
     action: str
     target: str
-    details: Optional[dict] = None
+    details: dict | None = None
+
 
 class IntentDetector:
     """
@@ -20,7 +22,7 @@ class IntentDetector:
         "tensorflow": ["tensorflow", "tf"],
         "jupyter": ["jupyter", "jupyterlab", "notebook"],
         "cudnn": ["cudnn"],
-        "gpu": ["gpu", "graphics card", "rtx", "nvidia"]
+        "gpu": ["gpu", "graphics card", "rtx", "nvidia"],
     }
 
     def detect(self, text: str) -> List[Intent]:
@@ -41,8 +43,7 @@ class IntentDetector:
         # 3. GPU configure intent (use all GPU synonyms)
         gpu_keywords = self.COMMON_PACKAGES.get("gpu", ["gpu"])
         if any(k in text for k in gpu_keywords) and not any(
-            i.action == "configure" and i.target == "gpu"
-            for i in intents
+            i.action == "configure" and i.target == "gpu" for i in intents
         ):
             intents.append(Intent(action="configure", target="gpu"))
 

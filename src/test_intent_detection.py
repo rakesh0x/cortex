@@ -1,4 +1,5 @@
-from intent.detector import IntentDetector, Intent
+from intent.detector import IntentDetector
+
 
 def test_detector_basic():
     d = IntentDetector()
@@ -8,6 +9,7 @@ def test_detector_basic():
     assert "cuda" in targets
     assert "pytorch" in targets
     assert "gpu" in targets
+
 
 def test_detector_empty():
     d = IntentDetector()

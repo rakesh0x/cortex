@@ -1,12 +1,13 @@
 from intent.detector import Intent
 from intent.planner import InstallationPlanner
 
+
 def test_planner_cuda_pipeline():
     planner = InstallationPlanner()
     intents = [
         Intent("install", "cuda"),
         Intent("install", "pytorch"),
-        Intent("configure", "gpu")
+        Intent("configure", "gpu"),
     ]
     plan = planner.build_plan(intents)
 

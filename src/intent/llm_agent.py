@@ -1,3 +1,8 @@
+from intent.clarifier import Clarifier
+from intent.context import SessionContext
+from intent.detector import IntentDetector, Intent
+from intent.planner import InstallationPlanner
+
 # src/intent/llm_agent.py
 
 # -------------------------------
@@ -7,11 +12,6 @@ try:
     from anthropic import Anthropic
 except ImportError:
     Anthropic = None
-
-from intent.detector import IntentDetector, Intent
-from intent.planner import InstallationPlanner
-from intent.clarifier import Clarifier
-from intent.context import SessionContext
 
 
 class LLMIntentAgent:
@@ -24,8 +24,9 @@ class LLMIntentAgent:
     - session context
     """
 
-    def __init__(self, api_key: str | None = None,
-                 model: str = "claude-3-5-sonnet-20240620"):
+    def __init__(
+        self, api_key: str | None = None, model: str = "claude-3-5-sonnet-20240620"
+    ):
 
         # LLM is enabled ONLY if SDK + API key is available
         if Anthropic is None or api_key is None:
@@ -60,7 +61,7 @@ class LLMIntentAgent:
                 "intents": intents,
                 "plan": self.planner.build_plan(intents),
                 "suggestions": [],
-                "gpu": self.context.get_gpu()
+                "gpu": self.context.get_gpu(),
             }
 
         # 4. Improve intents using LLM (safe)
@@ -85,13 +86,15 @@ class LLMIntentAgent:
             "intents": improved_intents,
             "plan": plan,
             "suggestions": suggestions,
-            "gpu": self.context.get_gpu()
+            "gpu": self.context.get_gpu(),
         }
 
     # ----------------------------------------------
     # LLM enhancement of intents
     # ----------------------------------------------
-    def enhance_intents_with_llm(self, text: str, intents: list[Intent]) -> list[Intent]:
+    def enhance_intents_with_llm(
+        self, text: str, intents: list[Intent]
+    ) -> list[Intent]:
 
         prompt = f"""
 You are an installation-intent expert. Convert the user request into structured intents.
@@ -109,11 +112,13 @@ Format: "install: package" or "configure: component"
         response = self.llm.with_options(timeout=30.0).messages.create(
             model=self.model,
             max_tokens=300,
-            messages=[{"role": "user", "content": prompt}]
+            messages=[{"role": "user", "content": prompt}],
         )
 
         # ---- Safety check ----
-        if not getattr(response, "content", None) or not hasattr(response.content[0], "text"):
+        if not getattr(response, "content", None) or not hasattr(
+            response.content[0], "text"
+        ):
             return intents
 
         llm_output = response.content[0].text.lower().split("\n")
@@ -152,11 +157,17 @@ Return bullet list only.
         response = self.llm.with_options(timeout=30.0).messages.create(
             model=self.model,
             max_tokens=150,
-            messages=[{"role": "user", "content": prompt}]
+            messages=[{"role": "user", "content": prompt}],
         )
 
         # ---- Safety check ----
-        if not getattr(response, "content", None) or not hasattr(response.content[0], "text"):
+        if not getattr(response, "content", None) or not hasattr(
+            response.content[0], "text"
+        ):
             return []
 
-        return [line.strip() for line in response.content[0].text.strip().split("\n") if line.strip()]
+        return [
+            line.strip()
+            for line in response.content[0].text.strip().split("\n")
+            if line.strip()
+        ]

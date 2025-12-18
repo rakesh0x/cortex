@@ -1,7 +1,8 @@
+from intent.detector import Intent
+from typing import List
+
 # planner.py
 
-from typing import List
-from intent.detector import Intent
 
 class InstallationPlanner:
 

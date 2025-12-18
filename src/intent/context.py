@@ -1,7 +1,8 @@
+from intent.detector import Intent
+from typing import List, Optional
+
 # context.py
 
-from typing import List, Optional
-from intent.detector import Intent
 
 class SessionContext:
     """
@@ -11,7 +12,7 @@ class SessionContext:
     """
 
     def __init__(self):
-        self.detected_gpu: Optional[str] = None
+        self.detected_gpu: str | None = None
         self.previous_intents: List[Intent] = []
         self.installed_packages: List[str] = []
         self.clarifications: List[str] = []

@@ -1,6 +1,7 @@
 from intent.context import SessionContext
 from intent.detector import Intent
 
+
 def test_context_storage():
     ctx = SessionContext()
     ctx.set_gpu("NVIDIA RTX 4090")
